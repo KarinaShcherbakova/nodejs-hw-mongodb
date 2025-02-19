@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pino from 'pino';
-import contactsRouter from './routes/contacts.js';
+import contactsRouter from './routers/contacts.js';
+import errorHandler from './middlewares/errorHandler.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
 
 dotenv.config();
 
@@ -22,18 +24,12 @@ export const setupServer = () => {
 
   app.use('/contacts', contactsRouter);
 
-  app.use((req, res) => {
-    console.log('Handling request...');
-    res.status(404).json({ message: 'Not found' });
-  });
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);
-    console.log(`Server is running on port ${PORT}`);
   });
-
-  logger.info('Server setup is complete');
 };
 
-console.log('Server module loaded.');
 
