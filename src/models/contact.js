@@ -1,14 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const contactSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Name is required'],
+      required: [true, "Name is required"],
     },
     phoneNumber: {
       type: String,
-      required: [true, 'Phone number is required'],
+      required: [true, "Phone number is required"],
     },
     email: {
       type: String,
@@ -19,20 +19,21 @@ const contactSchema = new mongoose.Schema(
     },
     contactType: {
       type: String,
-      enum: ['work', 'home', 'personal'],
-      required: [true, 'Contact type is required'],
-      default: 'personal',
+      enum: ["work", "home", "personal"],
+      required: [true, "Contact type is required"],
+      default: "personal",
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
   }
 );
 
-const Contact = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model("Contact", contactSchema);
 export default Contact;
-
-
-
-

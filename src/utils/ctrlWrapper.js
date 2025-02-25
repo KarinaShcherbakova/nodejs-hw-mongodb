@@ -7,4 +7,3 @@ const ctrlWrapper = (ctrl) => async (req, res, next) => {
 };
 
 export default ctrlWrapper;
-
