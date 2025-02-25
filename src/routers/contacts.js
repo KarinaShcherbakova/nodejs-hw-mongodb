@@ -1,4 +1,5 @@
 import express from "express";
+import authenticate from "../middlewares/authenticate.js";
 import {
   getContacts,
   getContact,
@@ -13,10 +14,10 @@ import { createContactSchema, updateContactSchema } from "../models/contactSchem
 
 const router = express.Router();
 
-router.get("/", ctrlWrapper(getContacts));
-router.get("/:contactId", isValidId, ctrlWrapper(getContact));
-router.post("/", validateBody(createContactSchema), ctrlWrapper(createContact));
-router.patch("/:contactId", isValidId, validateBody(updateContactSchema), ctrlWrapper(updateContact));
-router.delete("/:contactId", isValidId, ctrlWrapper(deleteContact));
+router.get("/", authenticate, ctrlWrapper(getContacts));
+router.get("/:contactId", authenticate, isValidId, ctrlWrapper(getContact));
+router.post("/", authenticate, validateBody(createContactSchema), ctrlWrapper(createContact));
+router.patch("/:contactId", authenticate, isValidId, validateBody(updateContactSchema), ctrlWrapper(updateContact));
+router.delete("/:contactId", authenticate, isValidId, ctrlWrapper(deleteContact));
 
 export default router;

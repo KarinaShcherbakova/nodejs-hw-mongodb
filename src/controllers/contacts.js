@@ -1,19 +1,12 @@
-import createError from "http-errors";
-import {
-  getAllContacts,
-  getContactById,
-  createNewContact,
-  updateExistingContact,
-  removeContact,
-} from "../services/contacts.js";
+import Contact from "../models/contact.js";
+import createHttpError from "http-errors";
 
 export const getContacts = async (req, res, next) => {
   try {
-    const result = await getAllContacts(req.query);
+    const contacts = await Contact.find({ userId: req.user._id });
     res.status(200).json({
-      status: 200,
-      message: "Successfully found contacts!",
-      data: result,
+      status: "success",
+      data: contacts,
     });
   } catch (error) {
     next(error);
@@ -22,10 +15,14 @@ export const getContacts = async (req, res, next) => {
 
 export const getContact = async (req, res, next) => {
   try {
-    const contact = await getContactById(req.params.contactId);
+    const contact = await Contact.findOne({ _id: req.params.contactId, userId: req.user._id });
+
+    if (!contact) {
+      throw createHttpError(404, "Contact not found");
+    }
+
     res.status(200).json({
-      status: 200,
-      message: "Contact found",
+      status: "success",
       data: contact,
     });
   } catch (error) {
@@ -35,10 +32,11 @@ export const getContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
-    const newContact = await createNewContact(req.body);
+    const newContact = await Contact.create({ ...req.body, userId: req.user._id });
+
     res.status(201).json({
-      status: 201,
-      message: "Successfully created a contact!",
+      status: "success",
+      message: "Contact created successfully",
       data: newContact,
     });
   } catch (error) {
@@ -48,10 +46,18 @@ export const createContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
-    const updatedContact = await updateExistingContact(req.params.contactId, req.body);
+    const updatedContact = await Contact.findOneAndUpdate(
+      { _id: req.params.contactId, userId: req.user._id },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedContact) {
+      throw createHttpError(404, "Contact not found or does not belong to you");
+    }
+
     res.status(200).json({
-      status: 200,
-      message: "Successfully patched a contact!",
+      status: "success",
       data: updatedContact,
     });
   } catch (error) {
@@ -61,7 +67,12 @@ export const updateContact = async (req, res, next) => {
 
 export const deleteContact = async (req, res, next) => {
   try {
-    await removeContact(req.params.contactId);
+    const deletedContact = await Contact.findOneAndDelete({ _id: req.params.contactId, userId: req.user._id });
+
+    if (!deletedContact) {
+      throw createHttpError(404, "Contact not found or does not belong to you");
+    }
+
     res.status(204).send();
   } catch (error) {
     next(error);
