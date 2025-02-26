@@ -14,7 +14,8 @@ import { createContactSchema, updateContactSchema } from "../models/contactSchem
 
 const router = express.Router();
 
-router.get("/", authenticate, ctrlWrapper(getContacts));
+router.use(authenticate);
+router.get("/", ctrlWrapper(getContacts));
 router.get("/:contactId", authenticate, isValidId, ctrlWrapper(getContact));
 router.post("/", authenticate, validateBody(createContactSchema), ctrlWrapper(createContact));
 router.patch("/:contactId", authenticate, isValidId, validateBody(updateContactSchema), ctrlWrapper(updateContact));
