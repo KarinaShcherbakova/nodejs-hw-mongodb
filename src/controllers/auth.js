@@ -111,35 +111,19 @@ export const refresh = async (req, res, next) => {
 };
 
 export const logout = async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) throw createHttpError(401, "Refresh token is missing");
+
+  let decoded;
   try {
-    const { refreshToken } = req.cookies;
-
-    if (!refreshToken) {
-      throw createHttpError(401, 'Refresh token is missing');
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    } catch (error) {
-      throw createHttpError(403, 'Invalid refresh token');
-    }
-
-    const session = await Session.findOne({ userId: decoded.userId, refreshToken });
-    if (!session) {
-      throw createHttpError(403, 'Session not found');
-    }
-
-    await Session.deleteOne({ _id: session._id });
-
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
-    });
-
-    res.status(204).send();
+    decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
   } catch (error) {
-    next(error);
+    throw createHttpError(403, "Invalid refresh token");
   }
+
+  await Session.deleteMany({ userId: decoded.userId });
+
+  res.clearCookie("refreshToken", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "Strict" });
+
+  res.status(204).send();
 };
