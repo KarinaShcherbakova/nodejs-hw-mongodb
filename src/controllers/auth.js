@@ -130,76 +130,68 @@ export const logout = async (req, res, next) => {
 };
 
 export const sendResetEmail = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      throw createHttpError(400, "Email is required");
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw createHttpError(400, "Invalid email format.");
-    }
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      throw createHttpError(404, "User not found!");
-    }
-
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "5m" });
-
-    const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
-
-    await sendEmail(
-      email,
-      "Reset your password",
-      `<p>Click the link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`
-    );
-
-    res.status(200).json({
-      status: 200,
-      message: "Reset password email has been successfully sent.",
-      data: {},
-    });
-  } catch (error) {
-    next(error);
+  const { email } = req.body;
+  if (!email) {
+    return next(createHttpError(400, "Email is required"));
   }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return next(createHttpError(400, "Invalid email format."));
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(createHttpError(404, "User not found!"));
+  }
+
+  const token = jwt.sign({ email }, process.env.MY_NEW_JWT_SECRET, { expiresIn: "5m" }); 
+
+  const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
+
+  await sendEmail(
+    email,
+    "Reset your password",
+    `<p>Click the link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`
+  );
+
+  res.status(200).json({
+    status: 200,
+    message: "Reset password email has been successfully sent.",
+    data: {},
+  });
 };
 
 export const resetPassword = async (req, res, next) => {
-  try {
-    const { token, password } = req.body;
-    if (!token || !password) {
-      throw createHttpError(400, 'Token and password are required');
-    }
-
-    if (password.length < 8) {
-      throw createHttpError(400, 'Password must be at least 8 characters long.');
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      throw createHttpError(401, err.name === 'TokenExpiredError' ? 'Token has expired.' : 'Invalid token.');
-    }
-
-    const user = await User.findOne({ email: decoded.email });
-    if (!user) {
-      throw createHttpError(404, 'User not found!');
-    }
-
-    user.password = password;
-    await user.save();
-
-    await Session.deleteMany({ userId: user._id });
-
-    res.status(200).json({
-      status: 200,
-      message: 'Password has been successfully reset.',
-      data: {},
-    });
-  } catch (error) {
-    next(error);
+  const { token, password } = req.body;
+  if (!token || !password) {
+    return next(createHttpError(400, 'Token and password are required'));
   }
+
+  if (password.length < 8) {
+    return next(createHttpError(400, 'Password must be at least 8 characters long.'));
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.MY_NEW_JWT_SECRET);
+  } catch (err) {
+    return next(createHttpError(401, err.name === 'TokenExpiredError' ? 'Token has expired.' : 'Invalid token.'));
+  }
+
+  const user = await User.findOne({ email: decoded.email });
+  if (!user) {
+    return next(createHttpError(404, 'User not found!'));
+  }
+
+  user.password = password;
+  await user.save();
+
+  await Session.deleteMany({ userId: user._id });
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
+  });
 };
