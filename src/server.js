@@ -7,9 +7,17 @@ import authRouter from './routers/auth.js';
 import errorHandler from './middlewares/errorHandler.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import cookieParser from 'cookie-parser';
-
+import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
+
+cloudinary.api.ping()
+  .then(response => {
+    console.log("Cloudinary connection successful:", response);
+  })
+  .catch(error => {
+    console.error("Cloudinary connection error:", error);
+  });
 
 const logger = pino({
   transport: {
@@ -24,10 +32,10 @@ export const setupServer = () => {
 
   app.use(cors());
   app.use(express.json());
-  app.use(cookieParser()); 
+  app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
 
   app.use('/auth', authRouter);
-
   app.use('/contacts', contactsRouter);
 
   app.use(notFoundHandler);

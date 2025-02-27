@@ -19,7 +19,19 @@ export const getContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res, next) => {
-  const newContact = await contactService.createNewContact({ ...req.body, userId: req.user._id });
+  if (!req.file) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Photo is required',
+    });
+  }
+
+  const newContact = await contactService.createNewContact({
+    ...req.body,
+    userId: req.user._id,
+    photo: req.file,
+  });
+
   res.status(201).json({
     status: 201,
     message: "Contact created successfully!",
@@ -28,7 +40,7 @@ export const createContact = async (req, res, next) => {
 };
 
 export const updateContact = async (req, res, next) => {
-  const updatedContact = await contactService.updateExistingContact(req.params.contactId, req.user._id, req.body);
+  const updatedContact = await contactService.updateExistingContact(req.params.contactId, req.user._id, req.body, req.file);
   res.status(200).json({
     status: 200,
     message: "Contact updated successfully!",
