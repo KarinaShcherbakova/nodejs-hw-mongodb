@@ -27,16 +27,43 @@ export const getContactById = async (contactId, userId) => {
 };
 
 export const createNewContact = async (data) => {
-  return await Contact.create(data);
+  const { photo, ...contactData } = data;
+
+  let photoUrl = null;
+  if (photo) {
+    photoUrl = photo.path;
+  }
+
+  const contactToCreate = { ...contactData, photo: photoUrl };
+
+  return await Contact.create(contactToCreate);
 };
 
-export const updateExistingContact = async (contactId, userId, data) => {
+export const updateExistingContact = async (contactId, userId, data, file) => {
+  let photoUrl = data.photo || null;
+
+  if (Object.keys(data).length === 0 && !file) {
+    throw createError(400, "No fields to update");
+  }
+
+  if (file) {
+    photoUrl = file.path;
+  }
+
+  const updatedContactData = { ...data, photo: photoUrl };
+
+  console.log("Updated Contact Data:", updatedContactData);
+
   const updatedContact = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
-    data,
-    { new: true }
+    { $set: updatedContactData },
+    { new: true, runValidators: true }
   );
-  if (!updatedContact) throw createError(404, "Contact not found or does not belong to you");
+
+  if (!updatedContact) {
+    throw createError(404, "Contact not found or does not belong to you");
+  }
+
   return updatedContact;
 };
 
