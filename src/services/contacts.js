@@ -31,7 +31,7 @@ export const createNewContact = async (data) => {
 
   let photoUrl = null;
   if (photo) {
-    photoUrl = photo.path;
+    photoUrl = photo; 
   }
 
   const contactToCreate = { ...contactData, photo: photoUrl };

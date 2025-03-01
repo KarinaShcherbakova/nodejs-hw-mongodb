@@ -18,8 +18,13 @@ const router = express.Router();
 router.use(authenticate);
 router.get("/", ctrlWrapper(getContacts));
 router.get("/:contactId", authenticate, isValidId, ctrlWrapper(getContact));
-router.post("/", authenticate, upload.single("photo"), validateBody(createContactSchema), ctrlWrapper(createContact));
-router.patch("/:contactId", authenticate, isValidId, upload.single("photo"), validateBody(updateContactSchema), ctrlWrapper(updateContact));
+router.post(
+  "/",
+  authenticate,
+  upload.single("photo"),
+  ctrlWrapper(createContact)
+);
+router.patch("/:contactId", authenticate, isValidId, upload.single('photo'), validateBody(updateContactSchema), ctrlWrapper(updateContact));
 router.delete("/:contactId", authenticate, isValidId, ctrlWrapper(deleteContact));
 
 
