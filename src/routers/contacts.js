@@ -16,6 +16,14 @@ import upload from '../middlewares/upload.js';
 
 const router = express.Router();
 
+
+router.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.path);
+  console.log("Headers:", req.headers);
+  console.log("Body before Multer:", req.body);
+  next();
+});
+
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup());
 router.use(authenticate);
 
@@ -27,7 +35,8 @@ router.post(
   upload.single("photo"),
   ctrlWrapper(createContact)
 );
-router.patch("/:contactId", authenticate, isValidId, upload.single('photo'), validateBody(updateContactSchema), ctrlWrapper(updateContact));
+router.patch("/:contactId", authenticate, isValidId, upload.single('photo'),
+validateBody(updateContactSchema), ctrlWrapper(updateContact));
 router.delete("/:contactId", authenticate, isValidId, ctrlWrapper(deleteContact));
 
 export default router;

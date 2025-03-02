@@ -1,6 +1,6 @@
 import * as contactService from "../services/contacts.js";
 import { v2 as cloudinary } from "cloudinary";
-import { createContactSchema } from "../models/contactSchemas.js"; // Імпортуємо схему для валідації
+import { createContactSchema } from "../models/contactSchemas.js"; 
 
 
 
