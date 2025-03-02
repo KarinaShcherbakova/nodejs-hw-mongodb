@@ -1,0 +1,18 @@
+components:
+  schemas:
+    Contact:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+      properties:
+        name:
+          type: string
+          description: Name of the contact.
+        email:
+          type: string
+          description: Email of the contact.
+        phone:
+          type: string
+          description: Phone number of the contact.

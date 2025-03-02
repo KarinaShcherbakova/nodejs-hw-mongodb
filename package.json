@@ -8,7 +8,10 @@
     "lint": "eslint src/**/*.js",
     "start": "node ./src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,7 @@
   "homepage": "https://github.com/KarinaShcherbakova/nodejs-hw-mongodb#readme",
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@redocly/cli": "^1.31.3",
     "eslint": "^9.20.1",
     "globals": "^15.15.0",
     "nodemon": "^3.1.9",
@@ -36,8 +40,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "google-auth-library": "^9.15.1",
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.2",
     "morgan": "^1.10.0",
@@ -45,6 +51,9 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^6.10.0",
     "pino": "^9.6.0",
-    "pino-http": "^10.4.0"
+    "pino-http": "^10.4.0",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.7.0",
+    "yamljs": "^0.3.0"
   }
 }
