@@ -62,12 +62,12 @@
             "description": "Page number."
           },
           {
-            "name": "isFavorite",
+            "name": "isFavourite",
             "in": "query",
             "schema": {
               "type": "boolean"
             },
-            "description": "Filter contacts by favorite status (true/false)."
+            "description": "Filter contacts by favourite status (true/false)."
           },
           {
             "name": "contactType",
@@ -150,22 +150,22 @@
                     "format": "email",
                     "description": "Email address of the contact"
                   },
-                  "phone": {
+                  "phoneNumber": {
                     "type": "string",
                     "description": "Phone number of the contact"
                   },
-                  "isFavorite": {
+                  "isFavourite": {
                     "type": "boolean",
-                    "description": "Mark contact as favorite (true/false)"
+                    "description": "Mark contact as favourite (true/false)"
                   },
                   "contactType": {
                     "type": "string",
                     "description": "Type of contact (e.g., friend, work, family)"
                   },
-                  "image": {
+                  "photo": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Profile image of the contact"
+                    "description": "Profile photo of the contact"
                   }
                 }
               }
@@ -270,22 +270,22 @@
                     "format": "email",
                     "description": "Email address of the contact"
                   },
-                  "phone": {
+                  "phoneNumber": {
                     "type": "string",
                     "description": "Phone number of the contact"
                   },
-                  "isFavorite": {
+                  "isFavourite": {
                     "type": "boolean",
-                    "description": "Mark contact as favorite (true/false)"
+                    "description": "Mark contact as favourite (true/false)"
                   },
                   "contactType": {
                     "type": "string",
                     "description": "Type of contact (e.g., friend, work, family)"
                   },
-                  "image": {
+                  "photo": {
                     "type": "string",
                     "format": "binary",
-                    "description": "New profile image for the contact"
+                    "description": "New profile photo for the contact"
                   }
                 }
               }

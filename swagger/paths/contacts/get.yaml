@@ -17,11 +17,11 @@ parameters:
     schema:
       type: integer
     description: Page number.
-  - name: isFavorite
+  - name: isFavourite
     in: query
     schema:
       type: boolean
-    description: Filter contacts by favorite status (true/false).
+    description: Filter contacts by favourite status (true/false).
   - name: contactType
     in: query
     schema:
