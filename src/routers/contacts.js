@@ -1,4 +1,5 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
 import authenticate from "../middlewares/authenticate.js";
 import {
   getContacts,
@@ -15,7 +16,9 @@ import upload from '../middlewares/upload.js';
 
 const router = express.Router();
 
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup());
 router.use(authenticate);
+
 router.get("/", ctrlWrapper(getContacts));
 router.get("/:contactId", authenticate, isValidId, ctrlWrapper(getContact));
 router.post(
@@ -26,6 +29,5 @@ router.post(
 );
 router.patch("/:contactId", authenticate, isValidId, upload.single('photo'), validateBody(updateContactSchema), ctrlWrapper(updateContact));
 router.delete("/:contactId", authenticate, isValidId, ctrlWrapper(deleteContact));
-
 
 export default router;
