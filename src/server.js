@@ -8,10 +8,9 @@ import errorHandler from './middlewares/errorHandler.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import cookieParser from 'cookie-parser';
 import { v2 as cloudinary } from 'cloudinary';
-
+import yaml from 'yaml';
 import fs from 'fs';
-import swaggerUi from "swagger-ui-express";
-import yaml from "yaml";
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 
 dotenv.config();
@@ -44,7 +43,8 @@ const swaggerDocument = yaml.parse(swaggerFile);
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/api-docs', swaggerDocs());
+
 
   app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
