@@ -12,10 +12,8 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  # - url: http://localhost:3001/api-docs
-  #   description: Local development server
-  - url: https://my-api.onrender.com
-    description: Production server (Update after deployment)
+  - url: https://contacts-app-hw7-swagger.onrender.com
+    description: Production server
 paths:
   /contacts:
     get:
