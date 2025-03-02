@@ -12,6 +12,7 @@ parameters:
     required: true
     schema:
       type: string
+    description: Unique identifier of the contact.
 responses:
   '200':
     description: Contact retrieved successfully.
@@ -19,5 +20,7 @@ responses:
       application/json:
         schema:
           $ref: '../../../components/contactSchema.yaml#/components/schemas/Contact'
+  '400':
+    description: Invalid contact ID format.
   '404':
     description: Contact not found.

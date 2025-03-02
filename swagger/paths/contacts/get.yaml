@@ -17,14 +17,38 @@ parameters:
     schema:
       type: integer
     description: Page number.
+  - name: isFavorite
+    in: query
+    schema:
+      type: boolean
+    description: Filter contacts by favorite status (true/false).
+  - name: contactType
+    in: query
+    schema:
+      type: string
+    description: Filter contacts by contact type.
+  - name: type
+    in: query
+    required: true
+    schema:
+      type: string
+    description: Filter contacts by type (Required).
+  - name: sortBy
+    in: query
+    schema:
+      type: string
+      enum: [name, createdAt, updatedAt]
+    description: Sort contacts by name, creation date, or update date.
 responses:
   '200':
     description: A list of contacts retrieved successfully.
     content:
       application/json:
         schema:
-          $ref: '../../components/contactSchema.yaml#/components/schemas/Contact'
+          type: array
+          items:
+            $ref: '../../components/contactSchema.yaml#/components/schemas/Contact'
   '400':
     description: Bad request. The request could not be understood or was missing required parameters.
   '404':
-    description: Contacts not found. The contact with the specified ID could not be found.
+    description: Contacts not found.
